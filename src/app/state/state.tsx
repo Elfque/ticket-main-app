@@ -1,9 +1,18 @@
 import { create } from "zustand";
 
-const useStore = create((set) => ({
+export interface authState {
+  user: any;
+  authorized: boolean;
+  error: string;
+}
+export interface authFuncs {
+  getUser: () => void;
+}
+
+const useStore = create<authState & authFuncs>((set) => ({
   user: null,
   authorized: false,
-  error: null,
+  error: "",
 
   getUser: () => {
     fetch(`/api/auth?token=${localStorage.getItem("token")}`)

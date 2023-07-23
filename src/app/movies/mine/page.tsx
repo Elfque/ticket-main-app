@@ -1,15 +1,12 @@
 "use client";
 import Navbar from "@/app/components/Navbar";
-import useStore from "@/app/state/state";
+import useStore, { authState, authFuncs } from "@/app/state/state";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const Page = () => {
   const router = useRouter();
-  const user = useStore((state) => state.user);
-  const authorize = useStore((state) => state.authorize);
-  const error = useStore((state) => state.error);
-  const getUser = useStore((state) => state.getUser);
+  const { user, error, getUser }: authState & authFuncs = useStore();
 
   const [movies, setMovies] = useState<any[]>([]);
 

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-// import Navbar from "../components/Navbar";
+import Navbar from "../components/Navbar";
 // import useStore from "../state/state";
 // import { useRouter } from "next/navigation";
 import axios from "axios";
@@ -13,12 +13,7 @@ const Movies = () => {
   const getMovies = async () => {
     try {
       const res = await axios.get("https://r3tro.pythonanywhere.com/movies/");
-      // const res = await axios.get("https://api.github.com/users");
-      console.log(res.data);
       setMovies(res.data);
-      // const initial = await fetch("https://r3tro.pythonanywhere.com/movies");
-      // const res = await initial.json();
-      // console.log(res);
     } catch (error) {
       console.log(error);
     }
@@ -36,7 +31,7 @@ const Movies = () => {
   return (
     <div>
       <div className="w-5/6 mx-auto">
-        {/* <Navbar /> */}
+        <Navbar />
         <div className="text-2xl mb-4">Movies that are available</div>
         <div className="movies grid grid-cols-movieGrid gap-4">
           {movies &&
