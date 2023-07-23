@@ -8,20 +8,38 @@
   --background-end-rgb: 255, 255, 255;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+body {
+  @apply bg-slate-800 text-gray-100;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+.box {
+  @apply w-12 h-12 rounded-md;
+}
+
+.signifiers {
+  @apply mt-8;
+}
+.signifiers > div {
+  @apply flex gap-6 items-center my-4;
+}
+
+.signifiers img {
+  @apply h-12;
+}
+.right {
+  @apply grid grid-cols-3;
+}
+.left {
+  @apply grid grid-cols-4;
+}
+.middle {
+  @apply grid grid-cols-4;
+}
+
+.field {
+  @apply my-2;
+}
+
+.movie-card:hover img {
+  @apply scale-125;
 }
