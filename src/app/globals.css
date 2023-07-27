@@ -43,3 +43,6 @@ body {
 .movie-card:hover img {
   @apply scale-125;
 }
+.movie-grad {
+  background: linear-gradient(to bottom, transparent, #00000072);
+}

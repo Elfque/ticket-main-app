@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 const Page = () => {
   const router = useRouter();
@@ -34,19 +35,35 @@ const Page = () => {
     e.preventDefault();
 
     try {
-      fetch("/api/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-          userName,
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
+      // fetch("/api/users", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({
+      //     email,
+      //     password,
+      //     userName,
+      //   }),
+      // })
+      //   .then((res) => res.json())
+      //   .then((data) => {
+      //     if (data.msg === "Success") {
+      //       router.push("/movies");
+      //     }
+      //   });
+      axios
+        .post(
+          "/auth/registration",
+          { email, password, userName },
+          {
+            baseURL: process.env.REACT_APP_BASE_URL,
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then(({ data }) => {
           if (data.msg === "Success") {
             router.push("/movies");
           }

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import axios from "axios";
 
 const Page = () => {
   const router = useRouter();
@@ -43,6 +44,22 @@ const Page = () => {
         .then((data) => {
           if (data.msg === "Success") {
             localStorage.setItem("token", data.token);
+            router.push("/movies");
+          }
+        });
+      axios
+        .post(
+          "/auth/login",
+          { email, password },
+          {
+            baseURL: process.env.REACT_APP_BASE_URL,
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then(({ data }) => {
+          if (data.msg === "Success") {
             router.push("/movies");
           }
         });

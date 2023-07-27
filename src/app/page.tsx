@@ -12,7 +12,9 @@ const Movies = () => {
 
   const getMovies = async () => {
     try {
-      const res = await axios.get("https://r3tro.pythonanywhere.com/movies/");
+      const res = await axios.get("/movies/", {
+        baseURL: process.env.REACT_APP_BASE_URL,
+      });
       setMovies(res.data);
     } catch (error) {
       console.log(error);
@@ -36,7 +38,7 @@ const Movies = () => {
         <div className="movies grid grid-cols-movieGrid gap-4">
           {movies &&
             movies?.map((movie) => (
-              <Link href={`/movies/${movie._id}`} key={movie._id}>
+              <Link href={`/movies/${movie.id}`} key={movie.id}>
                 <div className="bg-gray-400 hover:bg-gray-300 rounded-md overflow-hidden movie-card text-slate-700">
                   <div className="w-full h-40 overflow-hidden">
                     <img
