@@ -1,27 +1,32 @@
 "use client";
+
 import Navbar from "@/app/components/Navbar";
 import { useEffect, useState } from "react";
-import axios from "axios";
-import Link from "next/link";
-
 const Page = ({ params }: { params: { id: string } }) => {
   const { id } = params;
-  const [movie, setMovie] = useState<any>(null);
 
-  const getMovieById = async () => {
-    try {
-      const res = await axios.get(
-        `https://r3tro.pythonanywhere.com/movies/${id}/`
-      );
-      setMovie(res.data);
-      console.log(res.data);
-    } catch (error) {
-      console.log(error);
-    }
+  type movieInterface = {
+    seats: Array<any>;
+    title: string;
+    start_time: Date;
+  };
+  const [movies, setMovies] = useState<movieInterface>();
+  const [selected, setSelected] = useState<string[]>([]);
+
+  let row: string[] = ["", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
+  let column: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+  const getMyMovies = () => {
+    fetch(`https://r3tro.pythonanywhere.com/showtimes/${id}/`)
+      .then((res) => res.json())
+      .then((data) => {
+        setMovies(data);
+        console.log(data);
+      });
   };
 
   useEffect(() => {
-    getMovieById();
+    getMyMovies();
   }, []);
 
   let months: string[] = [
@@ -39,6 +44,31 @@ const Page = ({ params }: { params: { id: string } }) => {
     "Dec",
   ];
 
+  const bookSeats = () => {
+    fetch(`https://r3tro.pythonanywhere.com/showtimes/${id}/`, {
+      method: "PUT",
+      body: JSON.stringify({
+        book_seat: selected,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+
+        // setMovies(data.movie);
+        // setSelected([]);
+      });
+  };
+
+  const addAndRemove = (seatNumber: string) => {
+    if (selected.includes(seatNumber)) {
+      setSelected((prevSelected) =>
+        prevSelected.filter((prev) => prev !== seatNumber)
+      );
+    } else {
+      setSelected((prevSelected) => [...prevSelected, seatNumber]);
+    }
+  };
   const formatDate = (date: Date) => {
     const newDate = new Date(date);
 
@@ -51,51 +81,104 @@ const Page = ({ params }: { params: { id: string } }) => {
   };
 
   return (
-    <div className="w-4/5 mx-auto">
-      <Navbar />
-      {movie && (
-        <div>
-          <div className="relative h-fit">
-            <img
-              src={movie.backdrop_path}
-              alt=""
-              className="w-full h-96 object-cover"
-            />
-            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-black/50">
-              <div className="absolute left-4 bottom-4">
-                <div className="text-[3rem] font-extrabold">{movie.title}</div>
-                <div className="text-sm">{movie.overview}</div>
-              </div>
-            </div>
-          </div>
-
-          <div className="">
-            <span className="font-semibold mr-4 text-xl">Rating:</span>{" "}
-            {movie.rating}
-            /10
-          </div>
-          <div className="">
-            <span className="font-semibold mr-4 text-xl">Duration:</span>{" "}
-            {movie.duration}
-            /10
-          </div>
-          <div className="mt-4">
-            <div>Showtimes</div>
-            <div className="grid grid-cols-movieGrid gap-4">
-              {movie.showtimes?.map((show) => (
+    <div>
+      <div className="w-4/5 mx-auto mb-6">
+        <Navbar />
+      </div>
+      {movies && (
+        <div className="grid grid-cols-10 divide-x-2 divide-gray-400 w-4/5 mx-auto">
+          <div className="flex gap-4 col-span-7">
+            <div className="grid gap-4">
+              {row.map((rows) => (
                 <div
-                  key={show.id}
-                  className="bg-gray-900/80 p-2 rounded-md hover:bg-gray-900 transform duration-500"
+                  className="text-center h-10 w-10 flex justify-center items-center p-2 uppercase"
+                  key={rows}
                 >
-                  <div>{formatDate(show.start_time).date}</div>
-                  <div>{formatDate(show.start_time).time}</div>
-                  <div className="text-end">
-                    <button className="text-sm font-semibold text-white rounded-md border border-white p-2">
-                      <Link href={`/movies/${show.id}`}>Book Seat</Link>
-                    </button>
-                  </div>
+                  {rows}
                 </div>
               ))}
+            </div>
+            <div className="grid grid-cols-10 gap-4">
+              {column.map((col) => (
+                <div
+                  className="text-center h-10 w-10 flex justify-center items-center p-2 uppercase"
+                  key={col}
+                >
+                  {col}
+                </div>
+              ))}
+              {movies.seats.map((seat) => (
+                <div
+                  key={seat.seat_number}
+                  className=""
+                  onClick={() => {
+                    if (seat.isbooked) {
+                      alert("Seat has been booked");
+                    } else {
+                      addAndRemove(seat.seat_number);
+                    }
+                  }}
+                >
+                  {seat.isbooked === true ? (
+                    <img src="/img/seat-car-red.svg" alt="" className="h-10" />
+                  ) : selected.includes(seat.seat_number) ? (
+                    <img src="/img/seat-car-blue.svg" alt="" className="h-10" />
+                  ) : (
+                    <img
+                      src="/img/seat-car-green.svg"
+                      alt=""
+                      className="h-10"
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="col-span-3 pl-10">
+            <div className="details">
+              <div>
+                <span className="field font-semibold mr-8 text-blue-700 text-lg">
+                  Movie:{" "}
+                </span>
+                <span className="value text-sm">{movies?.title}</span>
+              </div>
+              <div>
+                <span className="field font-semibold mr-8 text-blue-700 text-lg">
+                  Date:{" "}
+                </span>
+                <span className="value text-sm">
+                  {formatDate(movies?.start_time).date}
+                </span>
+              </div>
+              <div>
+                <span className="field font-semibold mr-8 text-blue-700 text-lg">
+                  Time:{" "}
+                </span>
+                <span className="value text-sm">
+                  {formatDate(movies?.start_time).time}
+                </span>
+              </div>
+
+              <button
+                className="book text-sm font-semibold bg-blue-700 text-white py-2 px-6 rounded-md mt-6"
+                onClick={bookSeats}
+              >
+                Book Now
+              </button>
+              <div className="signifiers">
+                <div>
+                  <img src="/img/seat-car-green.svg" alt="" />
+                  <div>Available</div>
+                </div>
+                <div>
+                  <img src="/img/seat-car-red.svg" alt="" />
+                  <div>Booked</div>
+                </div>
+                <div>
+                  <img src="/img/seat-car-blue.svg" alt="" />
+                  <div>Selected</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

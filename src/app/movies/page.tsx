@@ -36,7 +36,7 @@ const Movies = () => {
         <div className="movies grid grid-cols-movieGrid gap-4">
           {movies &&
             movies?.map((movie) => (
-              <Link href={`/movies/showtimes/${movie.id}`} key={movie.id}>
+              <Link href={`/movies/${movie.id}`} key={movie.id}>
                 <div className="bg-gray-400 hover:bg-gray-300 rounded-md overflow-hidden movie-card text-slate-700">
                   <div className="w-full h-40 overflow-hidden">
                     <img
