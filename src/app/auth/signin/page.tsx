@@ -8,16 +8,16 @@ import axios from "axios";
 const Page = () => {
   const router = useRouter();
   type detail = {
-    email: string;
+    username: string;
     password: string;
   };
 
   const [details, setDetails] = useState<detail>({
-    email: "",
+    username: "",
     password: "",
   });
 
-  const { email, password } = details;
+  const { username, password } = details;
 
   const changing = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDetails({
@@ -30,41 +30,19 @@ const Page = () => {
     e.preventDefault();
 
     try {
-      fetch("/api/auth", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.msg === "Success") {
-            localStorage.setItem("token", data.token);
-            router.push("/movies");
-          }
-        });
-      axios
-        .post(
-          "/auth/login",
-          { email, password },
-          {
-            baseURL: process.env.REACT_APP_BASE_URL,
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        .then(({ data }) => {
-          if (data.msg === "Success") {
-            router.push("/movies");
-          }
-        });
-    } catch (error) {
-      console.log(error);
+      const res = await axios.post(
+        "https://r3tro.pythonanywhere.com/auth/login/",
+        { username, password },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      localStorage.setItem("token", res.data.key);
+      router.push("/movies");
+    } catch (error: any) {
+      console.log(error.response);
     }
   };
 
@@ -75,10 +53,10 @@ const Page = () => {
 
         <form action="" onSubmit={submitForm}>
           <div className="control mt-2">
-            <label htmlFor="title">Email</label>
+            <label htmlFor="title">UserName</label>
             <input
-              type="email"
-              name="email"
+              type="text"
+              name="username"
               className="block bg-gray-600 text-white mt-2 outline-none p-1"
               onChange={changing}
             />

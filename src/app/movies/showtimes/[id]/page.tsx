@@ -1,17 +1,22 @@
 "use client";
 
 import Navbar from "@/app/components/Navbar";
+import useStore, { authState, authFuncs } from "@/app/state/state";
 import { useEffect, useState } from "react";
+
 const Page = ({ params }: { params: { id: string } }) => {
   const { id } = params;
+
+  const { user, error, getUser }: authState & authFuncs = useStore();
 
   type movieInterface = {
     seats: Array<any>;
     title: string;
+    movie: any;
     start_time: Date;
   };
   const [movies, setMovies] = useState<movieInterface>();
-  const [selected, setSelected] = useState<string[]>([]);
+  const [selected, setSelected] = useState<number[]>([]);
 
   let row: string[] = ["", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
   let column: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -21,13 +26,13 @@ const Page = ({ params }: { params: { id: string } }) => {
       .then((res) => res.json())
       .then((data) => {
         setMovies(data);
-        console.log(data);
       });
   };
 
   useEffect(() => {
-    getMyMovies();
-  }, []);
+    if (!user) getUser();
+    user && getMyMovies();
+  }, [user]);
 
   let months: string[] = [
     "Jan",
@@ -50,17 +55,19 @@ const Page = ({ params }: { params: { id: string } }) => {
       body: JSON.stringify({
         book_seat: selected,
       }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${localStorage.getItem("token")}`,
+      },
     })
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-
-        // setMovies(data.movie);
-        // setSelected([]);
+        setMovies(data);
       });
   };
 
-  const addAndRemove = (seatNumber: string) => {
+  const addAndRemove = (seatNumber: number) => {
     if (selected.includes(seatNumber)) {
       setSelected((prevSelected) =>
         prevSelected.filter((prev) => prev !== seatNumber)
@@ -69,6 +76,7 @@ const Page = ({ params }: { params: { id: string } }) => {
       setSelected((prevSelected) => [...prevSelected, seatNumber]);
     }
   };
+
   const formatDate = (date: Date) => {
     const newDate = new Date(date);
 
@@ -109,19 +117,19 @@ const Page = ({ params }: { params: { id: string } }) => {
               ))}
               {movies.seats.map((seat) => (
                 <div
-                  key={seat.seat_number}
+                  key={seat.id}
                   className=""
                   onClick={() => {
-                    if (seat.isbooked) {
+                    if (seat.is_booked) {
                       alert("Seat has been booked");
                     } else {
-                      addAndRemove(seat.seat_number);
+                      addAndRemove(seat.id);
                     }
                   }}
                 >
-                  {seat.isbooked === true ? (
+                  {seat.is_booked === true ? (
                     <img src="/img/seat-car-red.svg" alt="" className="h-10" />
-                  ) : selected.includes(seat.seat_number) ? (
+                  ) : selected.includes(seat.id) ? (
                     <img src="/img/seat-car-blue.svg" alt="" className="h-10" />
                   ) : (
                     <img
@@ -140,7 +148,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                 <span className="field font-semibold mr-8 text-blue-700 text-lg">
                   Movie:{" "}
                 </span>
-                <span className="value text-sm">{movies?.title}</span>
+                <span className="value text-sm">{movies?.movie.title}</span>
               </div>
               <div>
                 <span className="field font-semibold mr-8 text-blue-700 text-lg">

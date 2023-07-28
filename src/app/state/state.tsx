@@ -15,7 +15,11 @@ const useStore = create<authState & authFuncs>((set) => ({
   error: "",
 
   getUser: () => {
-    fetch(`/api/auth?token=${localStorage.getItem("token")}`)
+    fetch("https://r3tro.pythonanywhere.com/auth/user/", {
+      headers: {
+        Authorization: `Token ${localStorage.getItem("token")}`,
+      },
+    })
       .then((res) => res.json())
       .then((data) => {
         if (data.msg === "Authorization required") {

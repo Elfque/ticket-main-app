@@ -10,19 +10,19 @@ const Page = () => {
 
   type detail = {
     email: string;
-    userName: string;
-    password: string;
+    username: string;
     password1: string;
+    password2: string;
   };
 
   const [details, setDetails] = useState<detail>({
     email: "",
-    userName: "",
-    password: "",
+    username: "",
+    password2: "",
     password1: "",
   });
 
-  const { email, password, userName } = details;
+  const { email, password1, password2, username } = details;
 
   const changing = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDetails({
@@ -35,41 +35,18 @@ const Page = () => {
     e.preventDefault();
 
     try {
-      // fetch("/api/users", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({
-      //     email,
-      //     password,
-      //     userName,
-      //   }),
-      // })
-      //   .then((res) => res.json())
-      //   .then((data) => {
-      //     if (data.msg === "Success") {
-      //       router.push("/movies");
-      //     }
-      //   });
-      axios
-        .post(
-          "/auth/registration",
-          { email, password, userName },
-          {
-            baseURL: process.env.REACT_APP_BASE_URL,
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        .then(({ data }) => {
-          if (data.msg === "Success") {
-            router.push("/movies");
-          }
-        });
-    } catch (error) {
-      console.log(error);
+      const res = await axios.post(
+        "https://r3tro.pythonanywhere.com/auth/register/",
+        { email, password1, password2, username },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      router.push("/auth/signin");
+    } catch (error: any) {
+      console.log(error.response);
     }
   };
 
@@ -89,10 +66,10 @@ const Page = () => {
             />
           </div>
           <div className="control mt-2">
-            <label htmlFor="title">Username</label>
+            <label htmlFor="title">UserName</label>
             <input
               type="text"
-              name="userName"
+              name="username"
               className="block bg-gray-600 text-white mt-2 outline-none p-1 w-full"
               onChange={changing}
             />
@@ -101,7 +78,7 @@ const Page = () => {
             <label htmlFor="title">Password</label>
             <input
               type="password"
-              name="password"
+              name="password1"
               className="block bg-gray-600 text-white mt-2 outline-none p-1 w-full"
               onChange={changing}
             />
@@ -110,7 +87,7 @@ const Page = () => {
             <label htmlFor="title">Confirm Password</label>
             <input
               type="password"
-              name="password1"
+              name="password2"
               className="block bg-gray-600 text-white mt-2 outline-none p-1 w-full"
               onChange={changing}
             />

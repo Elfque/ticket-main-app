@@ -3,9 +3,12 @@ import Navbar from "@/app/components/Navbar";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
+import useStore, { authState, authFuncs } from "@/app/state/state";
 
 const Page = ({ params }: { params: { id: string } }) => {
   const { id } = params;
+  const { user, error, getUser }: authState & authFuncs = useStore();
+
   interface movieType {
     showtimes: any[];
     rating: string;
@@ -29,8 +32,9 @@ const Page = ({ params }: { params: { id: string } }) => {
   };
 
   useEffect(() => {
-    getMovieById();
-  }, []);
+    if (!user) getUser();
+    user && getMovieById();
+  }, [user]);
 
   let months: string[] = [
     "Jan",

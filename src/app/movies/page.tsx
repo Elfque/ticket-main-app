@@ -3,12 +3,12 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
-// import useStore from "../state/state";
-// import { useRouter } from "next/navigation";
+import useStore, { authState, authFuncs } from "@/app/state/state";
 import axios from "axios";
 
 const Movies = () => {
   const [movies, setMovies] = useState<any[]>();
+  const { user, error, getUser }: authState & authFuncs = useStore();
 
   const getMovies = async () => {
     try {
@@ -20,8 +20,9 @@ const Movies = () => {
   };
 
   useEffect(() => {
-    getMovies();
-  }, []);
+    if (!user) getUser();
+    user && getMovies();
+  }, [user]);
 
   const formatDate = (date: Date) => {
     const newDate = new Date(date);
