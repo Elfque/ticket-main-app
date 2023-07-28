@@ -3,18 +3,18 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
-// import useStore from "../state/state";
-// import { useRouter } from "next/navigation";
+import useStore, { authState, authFuncs } from "@/app/state/state";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const Movies = () => {
+  const router = useRouter();
   const [movies, setMovies] = useState<any[]>();
+  const { user, error, getUser }: authState & authFuncs = useStore();
 
   const getMovies = async () => {
     try {
-      const res = await axios.get("/movies/", {
-        baseURL: process.env.REACT_APP_BASE_URL,
-      });
+      const res = await axios.get("https://r3tro.pythonanywhere.com/movies/");
       setMovies(res.data);
     } catch (error) {
       console.log(error);
@@ -22,8 +22,12 @@ const Movies = () => {
   };
 
   useEffect(() => {
-    getMovies();
-  }, []);
+    if (!localStorage.getItem("token")) router.push("/auth/signin");
+    if (!user) getUser();
+    console.log(user);
+
+    user && getMovies();
+  }, [user]);
 
   const formatDate = (date: Date) => {
     const newDate = new Date(date);

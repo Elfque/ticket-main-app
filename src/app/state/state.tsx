@@ -27,7 +27,7 @@ const useStore = create<authState & authFuncs>((set) => ({
           set(() => ({ authorized: false }));
           set(() => ({ error: data.msg }));
         } else {
-          set(() => ({ user: data.user }));
+          set(() => ({ user: data }));
           set(() => ({ authorized: true }));
         }
       });
