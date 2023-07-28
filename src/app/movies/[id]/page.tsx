@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
 import useStore, { authState, authFuncs } from "@/app/state/state";
+import { useRouter } from "next/navigation";
 
 const Page = ({ params }: { params: { id: string } }) => {
   const { id } = params;
+  const router = useRouter();
   const { user, error, getUser }: authState & authFuncs = useStore();
 
   interface movieType {
@@ -32,6 +34,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   };
 
   useEffect(() => {
+    if (!localStorage.getItem("token")) router.push("/auth/signin");
     if (!user) getUser();
     user && getMovieById();
   }, [user]);

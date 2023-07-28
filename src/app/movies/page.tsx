@@ -5,8 +5,10 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import useStore, { authState, authFuncs } from "@/app/state/state";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const Movies = () => {
+  const router = useRouter();
   const [movies, setMovies] = useState<any[]>();
   const { user, error, getUser }: authState & authFuncs = useStore();
 
@@ -20,6 +22,7 @@ const Movies = () => {
   };
 
   useEffect(() => {
+    if (!localStorage.getItem("token")) router.push("/auth/signin");
     if (!user) getUser();
     user && getMovies();
   }, [user]);

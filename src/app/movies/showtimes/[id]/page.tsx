@@ -2,9 +2,11 @@
 
 import Navbar from "@/app/components/Navbar";
 import useStore, { authState, authFuncs } from "@/app/state/state";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const Page = ({ params }: { params: { id: string } }) => {
+  const router = useRouter();
   const { id } = params;
 
   const { user, error, getUser }: authState & authFuncs = useStore();
@@ -30,6 +32,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   };
 
   useEffect(() => {
+    if (!localStorage.getItem("token")) router.push("/auth/signin");
     if (!user) getUser();
     user && getMyMovies();
   }, [user]);
