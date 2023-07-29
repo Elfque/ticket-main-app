@@ -151,6 +151,9 @@ const Page = ({ params }: { params: { id: string } }) => {
                         ...seatAlert,
                         { type: "bad", text: "This seat has been booked" },
                       ]);
+                      setTimeout(() => {
+                        setSeatAlert([]);
+                      }, 2000);
                     } else {
                       addAndRemove(seat.id);
                     }
