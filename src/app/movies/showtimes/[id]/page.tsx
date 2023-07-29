@@ -4,6 +4,8 @@ import Navbar from "@/app/components/Navbar";
 import useStore, { authState, authFuncs } from "@/app/state/state";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import Loading1 from "@/app/components/Loader1";
+import Overlay from "@/app/components/Overlay";
 
 const Page = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
@@ -19,6 +21,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   };
   const [movies, setMovies] = useState<movieInterface>();
   const [selected, setSelected] = useState<number[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   let row: string[] = ["", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
   let column: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -53,6 +56,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   ];
 
   const bookSeats = () => {
+    setLoading(true);
     fetch(`https://r3tro.pythonanywhere.com/showtimes/${id}/`, {
       method: "PUT",
       body: JSON.stringify({
@@ -65,7 +69,7 @@ const Page = ({ params }: { params: { id: string } }) => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        setLoading(false);
         setMovies(data);
       });
   };
@@ -96,7 +100,7 @@ const Page = ({ params }: { params: { id: string } }) => {
       <div className="w-4/5 mx-auto mb-6">
         <Navbar />
       </div>
-      {movies && (
+      {movies ? (
         <div className="grid grid-cols-10 divide-x-2 divide-gray-400 w-4/5 mx-auto">
           <div className="flex gap-4 col-span-7">
             <div className="grid gap-4">
@@ -191,6 +195,18 @@ const Page = ({ params }: { params: { id: string } }) => {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      ) : (
+        <div className="flex h-[80vh] justify-center items-center w-full col-span-4">
+          <Loading1 />
+        </div>
+      )}
+      {loading && (
+        <div className="w-screen h-screen flex justify-center items-center fixed top-0">
+          <Overlay />
+          <div className="relative z-10">
+            <Loading1 />
           </div>
         </div>
       )}

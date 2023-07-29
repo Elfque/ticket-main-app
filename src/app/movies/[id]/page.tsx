@@ -1,5 +1,6 @@
 "use client";
 import Navbar from "@/app/components/Navbar";
+import Loading1 from "@/app/components/Loader1";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
@@ -9,6 +10,7 @@ import { useRouter } from "next/navigation";
 const Page = ({ params }: { params: { id: string } }) => {
   const { id } = params;
   const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
   const { user, error, getUser, months, days }: authState & authFuncs =
     useStore();
 
@@ -23,13 +25,16 @@ const Page = ({ params }: { params: { id: string } }) => {
   const [movie, setMovie] = useState<movieType>();
 
   const getMovieById = async () => {
+    setLoading(true);
     try {
       const res = await axios.get(
         `https://r3tro.pythonanywhere.com/movies/${id}/`
       );
       setMovie(res.data);
+      setLoading(false);
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   };
 
@@ -46,8 +51,8 @@ const Page = ({ params }: { params: { id: string } }) => {
       date: `${days[newDate.getDay()]}, ${newDate.getDate()}, ${
         months[newDate.getMonth()]
       } ${newDate.getFullYear()}`,
-      time: `${newDate.getHours() < 10 && 0}${newDate.getHours()} : ${
-        newDate.getMinutes() < 10 && 0
+      time: `${newDate.getHours() < 10 ? 0 : ""}${newDate.getHours()} : ${
+        newDate.getMinutes() < 10 ? 0 : ""
       }${newDate.getMinutes()}`,
     };
   };
@@ -55,7 +60,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   return (
     <div className="w-4/5 mx-auto">
       <Navbar />
-      {movie && (
+      {movie ? (
         <div className="mt-4">
           <div className="relative h-fit">
             <img
@@ -79,7 +84,6 @@ const Page = ({ params }: { params: { id: string } }) => {
           <div className="">
             <span className="font-semibold mr-4 text-xl">Duration:</span>{" "}
             {movie.duration}
-            /10
           </div>
           <div className="mt-4">
             <div className="font-semibold text-lg mb-2">Showtimes: </div>
@@ -102,6 +106,10 @@ const Page = ({ params }: { params: { id: string } }) => {
               ))}
             </div>
           </div>
+        </div>
+      ) : (
+        <div className="flex h-[80vh] justify-center items-center w-full col-span-4">
+          <Loading1 />
         </div>
       )}
     </div>

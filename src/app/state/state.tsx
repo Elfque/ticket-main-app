@@ -6,9 +6,11 @@ export interface authState {
   error: string;
   months: string[];
   days: string[];
+  // alert: any[];
 }
 export interface authFuncs {
   getUser: () => void;
+  // addAlert: (text: string, type: string) => void;
 }
 
 const useStore = create<authState & authFuncs>((set) => ({
@@ -30,6 +32,7 @@ const useStore = create<authState & authFuncs>((set) => ({
     "Dec",
   ],
   days: ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"],
+  // alert: [],
 
   getUser: () => {
     fetch("https://r3tro.pythonanywhere.com/auth/user/", {
@@ -49,6 +52,14 @@ const useStore = create<authState & authFuncs>((set) => ({
         }
       });
   },
+  // addAlert: (text: string, type: string) => {
+  //   const id = uuidv4();
+  //   set((state) => ({ alert: [...state.alert, { text, type, id: id }] }));
+
+  //   setTimeout(() => {
+  //     set((state) => ({ alert: state.alert.filter((ale) => ale.id !== id) }));
+  //   }, 3000);
+  // },
 }));
 
 export default useStore;
