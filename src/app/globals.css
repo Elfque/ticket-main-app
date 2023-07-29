@@ -44,5 +44,5 @@ body {
   @apply scale-125;
 }
 .movie-grad {
-  background: linear-gradient(to bottom, transparent, #00000072);
+  background: linear-gradient(to bottom, transparent, #000000d1);
 }

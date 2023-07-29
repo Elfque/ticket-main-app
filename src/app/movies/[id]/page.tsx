@@ -9,7 +9,8 @@ import { useRouter } from "next/navigation";
 const Page = ({ params }: { params: { id: string } }) => {
   const { id } = params;
   const router = useRouter();
-  const { user, error, getUser }: authState & authFuncs = useStore();
+  const { user, error, getUser, months, days }: authState & authFuncs =
+    useStore();
 
   interface movieType {
     showtimes: any[];
@@ -27,7 +28,6 @@ const Page = ({ params }: { params: { id: string } }) => {
         `https://r3tro.pythonanywhere.com/movies/${id}/`
       );
       setMovie(res.data);
-      console.log(res.data);
     } catch (error) {
       console.log(error);
     }
@@ -39,29 +39,16 @@ const Page = ({ params }: { params: { id: string } }) => {
     user && getMovieById();
   }, [user]);
 
-  let months: string[] = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-
   const formatDate = (date: Date) => {
     const newDate = new Date(date);
 
     return {
-      date: `${newDate.getDay()}, ${
+      date: `${days[newDate.getDay()]}, ${newDate.getDate()}, ${
         months[newDate.getMonth()]
       } ${newDate.getFullYear()}`,
-      time: `${newDate.getHours()} : ${newDate.getMinutes()}`,
+      time: `${newDate.getHours() < 10 && 0}${newDate.getHours()} : ${
+        newDate.getMinutes() < 10 && 0
+      }${newDate.getMinutes()}`,
     };
   };
 
@@ -69,14 +56,14 @@ const Page = ({ params }: { params: { id: string } }) => {
     <div className="w-4/5 mx-auto">
       <Navbar />
       {movie && (
-        <div>
+        <div className="mt-4">
           <div className="relative h-fit">
             <img
               src={movie.backdrop_path}
               alt=""
               className="w-full h-96 object-cover"
             />
-            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-black/50">
+            <div className="absolute top-0 left-0 w-full h-full movie-grad">
               <div className="absolute left-4 bottom-4">
                 <div className="text-[3rem] font-extrabold">{movie.title}</div>
                 <div className="text-sm">{movie.overview}</div>
@@ -95,7 +82,7 @@ const Page = ({ params }: { params: { id: string } }) => {
             /10
           </div>
           <div className="mt-4">
-            <div>Showtimes</div>
+            <div className="font-semibold text-lg mb-2">Showtimes: </div>
             <div className="grid grid-cols-movieGrid gap-4">
               {movie.showtimes?.map((show) => (
                 <div

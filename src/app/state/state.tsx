@@ -4,6 +4,8 @@ export interface authState {
   user: any;
   authorized: boolean;
   error: string;
+  months: string[];
+  days: string[];
 }
 export interface authFuncs {
   getUser: () => void;
@@ -13,6 +15,21 @@ const useStore = create<authState & authFuncs>((set) => ({
   user: null,
   authorized: false,
   error: "",
+  months: [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ],
+  days: ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"],
 
   getUser: () => {
     fetch("https://r3tro.pythonanywhere.com/auth/user/", {

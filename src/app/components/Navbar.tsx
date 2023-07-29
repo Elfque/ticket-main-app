@@ -1,13 +1,27 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 const Navbar = () => {
   const router = useRouter();
 
-  const signOut = () => {
-    localStorage.removeItem("token");
-    router.push("/auth/signin");
+  const signOut = async () => {
+    try {
+      axios
+        .get("https://r3tro.pythonanywhere.com/auth/logout/", {
+          headers: {
+            Authorization: `Token ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((data) => {
+          // localStorage.removeItem("token");
+          console.log(data);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+    // router.push("/auth/signin");
   };
 
   return (
