@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Loading1 from "@/app/components/Loader1";
 import Overlay from "@/app/components/Overlay";
+import Alert from "@/app/components/Alert";
+import axios from "axios";
 
 const Page = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
@@ -22,6 +24,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   const [movies, setMovies] = useState<movieInterface>();
   const [selected, setSelected] = useState<number[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [seatAlert, setSeatAlert] = useState<any[]>([]);
 
   let row: string[] = ["", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
   let column: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -55,23 +58,35 @@ const Page = ({ params }: { params: { id: string } }) => {
     "Dec",
   ];
 
-  const bookSeats = () => {
+  const bookSeats = async () => {
     setLoading(true);
-    fetch(`https://r3tro.pythonanywhere.com/showtimes/${id}/`, {
-      method: "PUT",
-      body: JSON.stringify({
-        book_seat: selected,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Token ${localStorage.getItem("token")}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setLoading(false);
-        setMovies(data);
+
+    try {
+      const res = await axios.put(
+        `https://r3tro.pythonanywhere.com/showtimes/${id}/`,
+        { book_seat: selected },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Token ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      setMovies(res.data);
+      setLoading(false);
+    } catch (error: any) {
+      setSeatAlert(error.response.data);
+      const newError = error.response.data.map((err: string) => {
+        return { type: "bad", text: err };
       });
+
+      setSeatAlert(newError);
+      setTimeout(() => {
+        setSeatAlert([]);
+      }, 3000);
+
+      setLoading(false);
+    }
   };
 
   const addAndRemove = (seatNumber: number) => {
@@ -99,6 +114,9 @@ const Page = ({ params }: { params: { id: string } }) => {
     <div>
       <div className="w-4/5 mx-auto mb-6">
         <Navbar />
+        {seatAlert.map((ale, idx) => (
+          <Alert alert={ale} key={idx} />
+        ))}
       </div>
       {movies ? (
         <div className="grid grid-cols-10 divide-x-2 divide-gray-400 w-4/5 mx-auto">
@@ -128,7 +146,11 @@ const Page = ({ params }: { params: { id: string } }) => {
                   className=""
                   onClick={() => {
                     if (seat.is_booked) {
-                      alert("Seat has been booked");
+                      // alert("Seat has been booked");
+                      setSeatAlert([
+                        ...seatAlert,
+                        { type: "bad", text: "This seat has been booked" },
+                      ]);
                     } else {
                       addAndRemove(seat.id);
                     }
