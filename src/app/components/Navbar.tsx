@@ -22,18 +22,18 @@ const Navbar = () => {
         <div className="logo font-bold text-3xl">Booker</div>
 
         <ul
-          className={`sm:flex w-full sm:w-fit absolute top-full p-4 sm:p-0 sm:static gap-4 text-center sm:gap-2 text-sm font-semibold bg-slate-500 sm:bg-transparent ${
+          className={`lg:flex w-full lg:w-fit absolute top-full p-4 lg:p-0 lg:static gap-4 text-center lg:gap-2 text-sm font-semibold bg-slate-500 lg:bg-transparent ${
             !showMenu && "hidden"
           }`}
         >
-          {/* <li className="py-2 px-4 hover:bg-gray-600">
-            <Link href={"/movies/mine"}>My Movies</Link>
-          </li> */}
-          <li className="py-2 px-4 hover:bg-gray-600">
-            <Link href={"/password/change"}>Change Password</Link>
-          </li>
           <li className="py-2 px-4 hover:bg-gray-600">
             <Link href={"/movies"}>Movies</Link>
+          </li>
+          <li className="py-2 px-4 hover:bg-gray-600">
+            <Link href={"/movies/mie"}>My Movies</Link>
+          </li>
+          <li className="py-2 px-4 hover:bg-gray-600">
+            <Link href={"/profile"}>My Profile</Link>
           </li>
           <li className="">
             <button
@@ -45,7 +45,7 @@ const Navbar = () => {
           </li>
         </ul>
         <div
-          className="w-12 h-12 border border-gray-400 rounded-lg p-2 sm:hidden block"
+          className="w-12 h-12 border border-gray-400 rounded-lg p-2 lg:hidden block"
           onClick={() => setShowMenu((prevShowMenu) => !prevShowMenu)}
         >
           {showMenu ? (

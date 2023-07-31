@@ -63,7 +63,7 @@ const Page = ({ params }: { params: { id: string } }) => {
 
     try {
       const res = await axios.put(
-        `https://r3tro.pythonanywhere.com/showtimes/${id}/`,
+        `https://r3tro.pythonanywhere.com/showtimes/${id}`,
         { book_seat: selected },
         {
           headers: {
