@@ -72,7 +72,7 @@ const Page = () => {
             <input
               type="text"
               name="username"
-              className="block bg-gray-600 text-white mt-2 outline-none p-1 w-full"
+              className="block bg-gray-600 text-white mt-2 outline-none py-2 px-4 w-full rounded-md"
               onChange={changing}
             />
           </div>
@@ -81,7 +81,7 @@ const Page = () => {
             <input
               type="password"
               name="password"
-              className="block bg-gray-600 text-white mt-2 outline-none p-1 w-full"
+              className="block bg-gray-600 text-white mt-2 outline-none py-2 px-4 w-full rounded-md"
               onChange={changing}
             />
           </div>

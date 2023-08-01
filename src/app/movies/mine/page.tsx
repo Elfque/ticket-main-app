@@ -66,7 +66,6 @@ const Page = () => {
                 <div className="text-sm">
                   Seat number : {movie.seat.seat_number}
                 </div>
-                <div>{movie.ticket_number}</div>
               </div>
             </Link>
           ))}
