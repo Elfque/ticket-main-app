@@ -30,7 +30,7 @@ const Navbar = () => {
             <Link href={"/movies"}>Movies</Link>
           </li>
           <li className="py-2 px-4 hover:bg-gray-600">
-            <Link href={"/movies/mie"}>My Movies</Link>
+            <Link href={"/movies/mine"}>My Movies</Link>
           </li>
           <li className="py-2 px-4 hover:bg-gray-600">
             <Link href={"/profile"}>My Profile</Link>

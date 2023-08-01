@@ -1,6 +1,7 @@
 "use client";
 import Navbar from "@/app/components/Navbar";
 import useStore, { authState, authFuncs } from "@/app/state/state";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -53,16 +54,21 @@ const Page = () => {
         <div className="text-2xl mb-6 font-semibold">My Movies</div>
         <div>
           {movies?.map((movie) => (
-            <div className="hover:bg-gray-600 p-2" key={movie.id}>
-              <div className="font-semibold">{movie.showtime.movie.title}</div>
-              <div className="text-sm">
-                Time :{formatDate(movie.showtime.start_time).date}{" "}
-                {formatDate(movie.showtime.start_time).time}
+            <Link href={`/movies/mine/${movie.ticket_number}`} key={movie.id}>
+              <div className="hover:bg-gray-600 p-2">
+                <div className="font-semibold">
+                  {movie.showtime.movie.title}
+                </div>
+                <div className="text-sm">
+                  Time :{formatDate(movie.showtime.start_time).date}{" "}
+                  {formatDate(movie.showtime.start_time).time}
+                </div>
+                <div className="text-sm">
+                  Seat number : {movie.seat.seat_number}
+                </div>
+                <div>{movie.ticket_number}</div>
               </div>
-              <div className="text-sm">
-                Seat number : {movie.seat.seat_number}
-              </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

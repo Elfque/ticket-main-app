@@ -116,8 +116,8 @@ const Page = ({ params }: { params: { id: string } }) => {
         ))}
       </div>
       {movies ? (
-        <div className="grid lg:grid-cols-10 lg:divide-x-2 divide-gray-400 w-4/5 mx-auto">
-          <div className="flex gap-4 col-span-10 lg:col-span-7 items-end">
+        <div className="grid lg:grid-cols-10 lg:divide-x-2 divide-gray-400 w-4/5 mx-auto mb-8">
+          <div className="flex gap-4 col-span-10 lg:col-span-7 items-end  overflow-x-auto w-full justify-center">
             <div className="grid gap-4">
               {row.map((rows) => (
                 <div
@@ -128,7 +128,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                 </div>
               ))}
             </div>
-            <div className="flex gap-16 overflow-x-auto w-full">
+            <div className="flex gap-16">
               <div className="left">
                 <div className="text-center">1</div>
                 <div className="text-center">2</div>
@@ -286,26 +286,17 @@ const Page = ({ params }: { params: { id: string } }) => {
             </div>
           </div>
           <div className="col-span-10 lg:col-span-3 pl-10 row-start-1 lg:col-start-8">
-            <div className="details text-center">
+            <div className="details text-center lg:text-left">
               <div>
-                <span className="field font-semibold mr-8 text-blue-700 text-lg">
-                  Movie:{" "}
-                </span>
-                <span className="value text-sm">{movies?.movie.title}</span>
+                <span className="value text-xl">{movies?.movie.title}</span>
               </div>
               <div>
-                <span className="field font-semibold mr-8 text-blue-700 text-lg">
-                  Date:{" "}
-                </span>
-                <span className="value text-sm">
+                <span className="value text-lg">
                   {formatDate(movies?.start_time).date}
                 </span>
               </div>
               <div>
-                <span className="field font-semibold mr-8 text-blue-700 text-lg">
-                  Time:{" "}
-                </span>
-                <span className="value text-sm">
+                <span className="value text-lg">
                   {formatDate(movies?.start_time).time}
                 </span>
               </div>
@@ -316,6 +307,9 @@ const Page = ({ params }: { params: { id: string } }) => {
               >
                 Book Now
               </button>
+              {selected.length > 0 && (
+                <div className="my-4">{selected.length} seats selected</div>
+              )}
               <div className="signifiers flex gap-6 justify-center flex-wrap lg:block">
                 <div>
                   <img src="/img/seat-car-green.svg" alt="" />
