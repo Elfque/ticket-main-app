@@ -61,7 +61,7 @@ const Page = ({ params }: { params: { id: string } }) => {
     <div className="w-4/5 mx-auto">
       <Navbar />
       {movie ? (
-        <div className="mt-4">
+        <div className="my-8 ">
           <div className="relative h-fit">
             <img
               src={movie.backdrop_path}
@@ -70,7 +70,9 @@ const Page = ({ params }: { params: { id: string } }) => {
             />
             <div className="absolute top-0 left-0 w-full h-full movie-grad">
               <div className="absolute left-4 bottom-4">
-                <div className="text-[3rem] font-extrabold">{movie.title}</div>
+                <div className="text-[2.5rem] font-extrabold">
+                  {movie.title}
+                </div>
                 <div className="text-sm">{movie.overview}</div>
               </div>
             </div>
@@ -87,7 +89,7 @@ const Page = ({ params }: { params: { id: string } }) => {
           </div>
           <div className="mt-4">
             <div className="font-semibold text-lg mb-2">Showtimes: </div>
-            <div className="grid grid-cols-movieGrid gap-4">
+            <div className="grid grid-cols-seatGrid gap-4">
               {movie.showtimes?.map((show) => (
                 <div
                   key={show.id}

@@ -22,7 +22,7 @@ const Navbar = () => {
         <div className="logo font-bold text-3xl">Booker</div>
 
         <ul
-          className={`lg:flex w-full lg:w-fit absolute top-full p-4 lg:p-0 lg:static gap-4 text-center lg:gap-2 text-sm font-semibold bg-slate-500 lg:bg-transparent ${
+          className={`lg:flex w-full lg:w-fit absolute top-full p-4 lg:p-0 lg:static gap-4 text-center lg:gap-2 text-sm bg-slate-500 lg:bg-transparent ${
             !showMenu && "hidden"
           }`}
         >

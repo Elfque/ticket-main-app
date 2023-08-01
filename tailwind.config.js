@@ -13,7 +13,8 @@ module.exports = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       gridTemplateColumns: {
-        movieGrid: "repeat(auto-fill,minmax(20rem,1fr))",
+        movieGrid: "repeat(auto-fill,minmax(12rem,1fr))",
+        seatGrid: "repeat(auto-fill,minmax(20rem,1fr))",
       },
     },
   },

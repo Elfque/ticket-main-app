@@ -120,3 +120,13 @@ body {
     box-shadow: 48px 0 #fff inset;
   }
 }
+
+.right {
+  @apply grid gap-4 lg:grid-cols-3 grid-cols-[repeat(3,2rem)];
+}
+.left {
+  @apply grid gap-4 grid-cols-3  grid-cols-[repeat(3,2rem)];
+}
+.middle {
+  @apply grid gap-4 grid-cols-4  grid-cols-[repeat(4,2rem)];
+}

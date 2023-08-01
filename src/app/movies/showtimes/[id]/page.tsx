@@ -13,7 +13,8 @@ const Page = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
   const { id } = params;
 
-  const { user, error, getUser }: authState & authFuncs = useStore();
+  const { user, error, getUser, days, months }: authState & authFuncs =
+    useStore();
 
   type movieInterface = {
     seats: Array<any>;
@@ -43,21 +44,6 @@ const Page = ({ params }: { params: { id: string } }) => {
     user && getMyMovies();
   }, [user]);
 
-  let months: string[] = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-
   const bookSeats = async () => {
     setLoading(true);
 
@@ -75,12 +61,17 @@ const Page = ({ params }: { params: { id: string } }) => {
       setMovies(res.data);
       setLoading(false);
     } catch (error: any) {
-      setSeatAlert(error.response.data);
-      const newError = error.response.data.map((err: string) => {
+      setLoading(false);
+
+      const newError = error?.response?.data.map((err: string) => {
         return { type: "bad", text: err };
       });
 
-      setSeatAlert(newError);
+      setSeatAlert(
+        error?.response?.data
+          ? newError
+          : [{ text: "Please Try Again", type: "bad" }]
+      );
       setTimeout(() => {
         setSeatAlert([]);
       }, 3000);
@@ -99,15 +90,21 @@ const Page = ({ params }: { params: { id: string } }) => {
     }
   };
 
-  const formatDate = (date: Date) => {
+  const formatDate: any = (date: Date) => {
     const newDate = new Date(date);
 
     return {
-      date: `${newDate.getDay()}, ${
+      date: `${days[newDate.getDay()]}, ${newDate.getDate()}, ${
         months[newDate.getMonth()]
       } ${newDate.getFullYear()}`,
-      time: `${newDate.getHours()} : ${newDate.getMinutes()}`,
+      time: `${newDate.getHours() < 10 ? 0 : ""}${newDate.getHours()} : ${
+        newDate.getMinutes() < 10 ? 0 : ""
+      }${newDate.getMinutes()}`,
     };
+  };
+
+  const getColNum = (id: number) => {
+    return id % 10;
   };
 
   return (
@@ -119,63 +116,177 @@ const Page = ({ params }: { params: { id: string } }) => {
         ))}
       </div>
       {movies ? (
-        <div className="grid grid-cols-10 divide-x-2 divide-gray-400 w-4/5 mx-auto">
-          <div className="flex gap-4 col-span-7">
+        <div className="grid lg:grid-cols-10 lg:divide-x-2 divide-gray-400 w-4/5 mx-auto">
+          <div className="flex gap-4 col-span-10 lg:col-span-7 items-end">
             <div className="grid gap-4">
               {row.map((rows) => (
                 <div
-                  className="text-center h-10 w-10 flex justify-center items-center p-2 uppercase"
+                  className="h-10 w-10 flex justify-center uppercase items-center"
                   key={rows}
                 >
                   {rows}
                 </div>
               ))}
             </div>
-            <div className="grid grid-cols-10 gap-4">
-              {column.map((col) => (
-                <div
-                  className="text-center h-10 w-10 flex justify-center items-center p-2 uppercase"
-                  key={col}
-                >
-                  {col}
-                </div>
-              ))}
-              {movies.seats.map((seat) => (
-                <div
-                  key={seat.id}
-                  className=""
-                  onClick={() => {
-                    if (seat.is_booked) {
-                      // alert("Seat has been booked");
-                      setSeatAlert([
-                        ...seatAlert,
-                        { type: "bad", text: "This seat has been booked" },
-                      ]);
-                      setTimeout(() => {
-                        setSeatAlert([]);
-                      }, 2000);
-                    } else {
-                      addAndRemove(seat.id);
-                    }
-                  }}
-                >
-                  {seat.is_booked === true ? (
-                    <img src="/img/seat-car-red.svg" alt="" className="h-10" />
-                  ) : selected.includes(seat.id) ? (
-                    <img src="/img/seat-car-blue.svg" alt="" className="h-10" />
-                  ) : (
-                    <img
-                      src="/img/seat-car-green.svg"
-                      alt=""
-                      className="h-10"
-                    />
-                  )}
-                </div>
-              ))}
+            <div className="flex gap-16 overflow-x-auto w-full">
+              <div className="left">
+                <div className="text-center">1</div>
+                <div className="text-center">2</div>
+                <div className="text-center">3</div>
+                {movies.seats.map((seat) => {
+                  if (getColNum(seat.id) < 4 && getColNum(seat.id) > 0) {
+                    return (
+                      <div
+                        key={seat.id}
+                        className=""
+                        onClick={() => {
+                          if (seat.is_booked) {
+                            setSeatAlert([
+                              ...seatAlert,
+                              {
+                                type: "bad",
+                                text: "This seat has been booked",
+                              },
+                            ]);
+                            setTimeout(() => {
+                              setSeatAlert([]);
+                            }, 2000);
+                          } else {
+                            addAndRemove(seat.id);
+                          }
+                        }}
+                      >
+                        {seat.is_booked === true ? (
+                          <img
+                            src="/img/seat-car-red.svg"
+                            alt=""
+                            className="h-10"
+                          />
+                        ) : selected.includes(seat.id) ? (
+                          <img
+                            src="/img/seat-car-blue.svg"
+                            alt=""
+                            className="h-10"
+                          />
+                        ) : (
+                          <img
+                            src="/img/seat-car-green.svg"
+                            alt=""
+                            className="h-10"
+                          />
+                        )}
+                      </div>
+                    );
+                  }
+                })}
+              </div>
+              <div className="middle">
+                <div className="text-center">4</div>
+                <div className="text-center">5</div>
+                <div className="text-center">6</div>
+                <div className="text-center">7</div>
+                {movies.seats.map((seat) => {
+                  if (getColNum(seat.id) > 3 && getColNum(seat.id) < 8) {
+                    return (
+                      <div
+                        key={seat.id}
+                        className=""
+                        onClick={() => {
+                          if (seat.is_booked) {
+                            setSeatAlert([
+                              ...seatAlert,
+                              {
+                                type: "bad",
+                                text: "This seat has been booked",
+                              },
+                            ]);
+                            setTimeout(() => {
+                              setSeatAlert([]);
+                            }, 2000);
+                          } else {
+                            addAndRemove(seat.id);
+                          }
+                        }}
+                      >
+                        {seat.is_booked === true ? (
+                          <img
+                            src="/img/seat-car-red.svg"
+                            alt=""
+                            className="h-10"
+                          />
+                        ) : selected.includes(seat.id) ? (
+                          <img
+                            src="/img/seat-car-blue.svg"
+                            alt=""
+                            className="h-10"
+                          />
+                        ) : (
+                          <img
+                            src="/img/seat-car-green.svg"
+                            alt=""
+                            className="h-10"
+                          />
+                        )}
+                      </div>
+                    );
+                  }
+                })}
+              </div>
+              <div className="right">
+                <div className="text-center">8</div>
+                <div className="text-center">9</div>
+                <div className="text-center">10</div>
+                {movies.seats.map((seat) => {
+                  if (getColNum(seat.id) > 7 || getColNum(seat.id) === 0) {
+                    return (
+                      <div
+                        key={seat.id}
+                        className=""
+                        onClick={() => {
+                          if (seat.is_booked) {
+                            setSeatAlert([
+                              ...seatAlert,
+                              {
+                                type: "bad",
+                                text: "This seat has been booked",
+                              },
+                            ]);
+                            setTimeout(() => {
+                              setSeatAlert([]);
+                            }, 2000);
+                          } else {
+                            addAndRemove(seat.id);
+                          }
+                        }}
+                      >
+                        {seat.is_booked === true ? (
+                          <img
+                            src="/img/seat-car-red.svg"
+                            alt=""
+                            className="h-10"
+                          />
+                        ) : selected.includes(seat.id) ? (
+                          <img
+                            src="/img/seat-car-blue.svg"
+                            alt=""
+                            className="h-10"
+                          />
+                        ) : (
+                          <img
+                            src="/img/seat-car-green.svg"
+                            alt=""
+                            className="h-10"
+                          />
+                        )}
+                      </div>
+                    );
+                  }
+                })}
+              </div>
             </div>
           </div>
-          <div className="col-span-3 pl-10">
-            <div className="details">
+          <div className="col-span-10 lg:col-span-3 pl-10 row-start-1 lg:col-start-8">
+            <div className="details text-center">
               <div>
                 <span className="field font-semibold mr-8 text-blue-700 text-lg">
                   Movie:{" "}
@@ -205,7 +316,7 @@ const Page = ({ params }: { params: { id: string } }) => {
               >
                 Book Now
               </button>
-              <div className="signifiers">
+              <div className="signifiers flex gap-6 justify-center flex-wrap lg:block">
                 <div>
                   <img src="/img/seat-car-green.svg" alt="" />
                   <div>Available</div>

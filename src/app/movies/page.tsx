@@ -12,10 +12,10 @@ const Movies = () => {
   const router = useRouter();
   const [movies, setMovies] = useState<any[]>();
   // const [loading, setLoading] = useState<boolean>(false);
-  const { user, error, getUser }: authState & authFuncs = useStore();
+  const { user, error, getUser, days, months }: authState & authFuncs =
+    useStore();
 
   const getMovies = async () => {
-    // setLoading(true)
     try {
       const res = await axios.get("https://r3tro.pythonanywhere.com/movies/");
       setMovies(res.data);
@@ -32,7 +32,15 @@ const Movies = () => {
 
   const formatDate = (date: Date) => {
     const newDate = new Date(date);
-    return Intl.DateTimeFormat("en-US").format(newDate);
+
+    return {
+      date: `${days[newDate.getDay()]}, ${newDate.getDate()}, ${
+        months[newDate.getMonth()]
+      } ${newDate.getFullYear()}`,
+      time: `${newDate.getHours() < 10 ? 0 : ""}${newDate.getHours()} : ${
+        newDate.getMinutes() < 10 ? 0 : ""
+      }${newDate.getMinutes()}`,
+    };
   };
 
   return (
@@ -42,12 +50,12 @@ const Movies = () => {
         <div className="text-2xl mb-4 font-semibold">
           Amazing movies for you
         </div>
-        <div className="movies grid grid-cols-movieGrid gap-4">
+        <div className="movies grid grid-cols-movieGrid gap-6 mb-8">
           {movies ? (
             movies?.map((movie) => (
               <Link href={`/movies/${movie.id}`} key={movie.id}>
-                <div className="bg-gray-400 hover:bg-gray-300 rounded-md overflow-hidden movie-card text-slate-700">
-                  <div className="w-full h-40 overflow-hidden">
+                <div className="bg-gray-700 hover:bg-gray-800 rounded-md overflow-hidden movie-card text-white">
+                  <div className="w-full h-80 overflow-hidden">
                     <img
                       src={movie.poster}
                       alt=""
@@ -56,10 +64,8 @@ const Movies = () => {
                   </div>
                   <div className="p-2">
                     <div className="w-full truncate">{movie.title}</div>
-                    <div>Rating : {movie.rating}</div>
-                    <div>Released Date: {movie.release_date}</div>
-                    {/* <div>#{movie.price}</div> */}
-                    {/* <div>{formatDate(movie.time)}</div> */}
+                    <div>{movie.rating}/10</div>
+                    <div>{formatDate(movie.release_date).date}</div>
                   </div>
                 </div>
               </Link>
