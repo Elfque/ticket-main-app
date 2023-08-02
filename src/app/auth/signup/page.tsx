@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import axios from "axios";
@@ -11,6 +12,37 @@ const Page = () => {
   const [alert, setAlert] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
+
+  const parentAnimation = {
+    hidden: {
+      opacity: 0,
+      x: "100vw",
+    },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 1,
+        type: "spring",
+        mass: 0.4,
+        damping: 4,
+        when: "beforeChildren",
+        staggerChildren: 0.4,
+      },
+    },
+  };
+
+  const childrenAnimation = {
+    hidden: {
+      opacity: 0,
+    },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 1,
+      },
+    },
+  };
 
   type detail = {
     email: string;
@@ -65,14 +97,19 @@ const Page = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen">
+    <motion.div
+      variants={parentAnimation}
+      initial="hidden"
+      animate="visible"
+      className="flex justify-center items-center min-h-screen"
+    >
       <div className="border border-gray-400 rounded-3xl p-10 w-[90%] max-w-sm">
         <div className="text-3xl text-center font-semibold mb-4">Register</div>
         {alert.map((ale, idx) => (
           <Alert alert={ale} key={idx} />
         ))}
         <form action="" onSubmit={submitForm}>
-          <div className="control mt-2">
+          <motion.div variants={childrenAnimation} className="control mt-2">
             <label htmlFor="title">Email</label>
             <input
               type="email"
@@ -80,8 +117,8 @@ const Page = () => {
               className="block bg-gray-600 text-white mt-2 outline-none py-2 px-4 w-full rounded-md"
               onChange={changing}
             />
-          </div>
-          <div className="control mt-2">
+          </motion.div>
+          <motion.div variants={childrenAnimation} className="control mt-2">
             <label htmlFor="title">UserName</label>
             <input
               type="text"
@@ -89,8 +126,8 @@ const Page = () => {
               className="block bg-gray-600 text-white mt-2 outline-none py-2 px-4 w-full rounded-md"
               onChange={changing}
             />
-          </div>
-          <div className="control mt-2">
+          </motion.div>
+          <motion.div variants={childrenAnimation} className="control mt-2">
             <label htmlFor="title">Password</label>
             <input
               type="password"
@@ -98,8 +135,8 @@ const Page = () => {
               className="block bg-gray-600 text-white mt-2 outline-none py-2 px-4 w-full rounded-md"
               onChange={changing}
             />
-          </div>
-          <div className="control mt-2">
+          </motion.div>
+          <motion.div variants={childrenAnimation} className="control mt-2">
             <label htmlFor="title">Confirm Password</label>
             <input
               type="password"
@@ -107,15 +144,16 @@ const Page = () => {
               className="block bg-gray-600 text-white mt-2 outline-none py-2 px-4 w-full rounded-md"
               onChange={changing}
             />
-          </div>
+          </motion.div>
 
           <div className="text-center mt-6">
-            <button
+            <motion.button
+              variants={childrenAnimation}
               type="submit"
               className="bg-gray-200 text-gray-800 text-sm font-semibold py-2 px-6 rounded-md w-full mb-4 flex justify-center items-center gap-4"
             >
               {loading && <Loader />} Sign Up
-            </button>
+            </motion.button>
           </div>
           <div className="text-center text-[12px]">
             Already had an account?{" "}
@@ -125,7 +163,7 @@ const Page = () => {
           </div>
         </form>
       </div>
-    </div>
+    </motion.div>
   );
 };
 export default Page;

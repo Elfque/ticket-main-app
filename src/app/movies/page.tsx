@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import useStore, { authState, authFuncs } from "@/app/state/state";
@@ -11,9 +11,7 @@ import Loading1 from "../components/Loader1";
 const Movies = () => {
   const router = useRouter();
   const [movies, setMovies] = useState<any[]>();
-  // const [loading, setLoading] = useState<boolean>(false);
-  const { user, error, getUser, days, months }: authState & authFuncs =
-    useStore();
+  const { user, getUser, days, months }: authState & authFuncs = useStore();
 
   const getMovies = async () => {
     try {
@@ -53,25 +51,29 @@ const Movies = () => {
         <div className="movies grid grid-cols-movieGrid gap-6 mb-8">
           {movies ? (
             movies?.map((movie) => (
-              <Link href={`/movies/${movie.id}`} key={movie.id}>
-                <div className="bg-gray-700 hover:bg-gray-800 rounded-md overflow-hidden movie-card text-white">
-                  <div className="w-full h-80 overflow-hidden">
-                    <img
-                      src={movie.poster}
-                      alt=""
-                      className="h-full object-cover transform duration-1000 w-full"
-                    />
-                  </div>
-                  <div className="p-2">
-                    <div className="w-full truncate">{movie.title}</div>
-                    <div>{movie.rating}/10</div>
-                    <div>{formatDate(movie.release_date).date}</div>
-                  </div>
+              <motion.div
+                className="bg-gray-700 hover:bg-gray-800 rounded-md overflow-hidden movie-card text-white"
+                key={movie.id}
+                onClick={() => router.push(`/movies/${movie.id}`)}
+                initial={{ y: 30 }}
+                animate={{ y: 0, transition: { duration: 1.5 } }}
+              >
+                <div className="w-full h-80 overflow-hidden">
+                  <img
+                    src={movie.poster}
+                    alt=""
+                    className="h-full object-cover transform duration-1000 w-full"
+                  />
                 </div>
-              </Link>
+                <div className="p-2">
+                  <div className="w-full truncate">{movie.title}</div>
+                  <div>{movie.rating}/10</div>
+                  <div>{formatDate(movie.release_date).date}</div>
+                </div>
+              </motion.div>
             ))
           ) : (
-            <div className="flex h-[80vh] justify-center items-center w-full col-span-4">
+            <div className="flex h-[70vh] justify-center items-center w-[80vw] col-span-4">
               <Loading1 />
             </div>
           )}

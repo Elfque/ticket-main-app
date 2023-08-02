@@ -98,10 +98,13 @@ const Page = ({ params }: { params: { id: string } }) => {
                   <div>{formatDate(show.start_time).date}</div>
                   <div>{formatDate(show.start_time).time}</div>
                   <div className="text-end">
-                    <button className="text-sm font-semibold text-white rounded-md border border-white p-2">
-                      <Link href={`/movies/showtimes/${show.id}`}>
-                        Book Seat
-                      </Link>
+                    <button
+                      className="text-sm font-semibold text-white rounded-md border border-white p-2"
+                      onClick={() =>
+                        router.push(`/movies/showtimes/${show.id}`)
+                      }
+                    >
+                      Book Seat
                     </button>
                   </div>
                 </div>
