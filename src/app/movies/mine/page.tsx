@@ -1,4 +1,5 @@
 "use client";
+import LoadingComponent from "@/app/components/LoaderComp";
 import Navbar from "@/app/components/Navbar";
 import useStore, { authState, authFuncs } from "@/app/state/state";
 import Link from "next/link";
@@ -10,7 +11,7 @@ const Page = () => {
   const { user, error, getUser, months, days }: authState & authFuncs =
     useStore();
 
-  const [movies, setMovies] = useState<any[]>([]);
+  const [movies, setMovies] = useState<any[]>();
 
   const getMyMovies = () => {
     fetch(`https://r3tro.pythonanywhere.com/my-movies/`, {
@@ -53,22 +54,38 @@ const Page = () => {
         <Navbar />
         <div className="text-2xl mb-6 font-semibold">My Movies</div>
         <div>
-          {movies?.map((movie) => (
-            <Link href={`/movies/mine/${movie.ticket_number}`} key={movie.id}>
-              <div className="hover:bg-gray-600 p-2">
-                <div className="font-semibold">
-                  {movie.showtime.movie.title}
-                </div>
-                <div className="text-sm">
-                  Time :{formatDate(movie.showtime.start_time).date}{" "}
-                  {formatDate(movie.showtime.start_time).time}
-                </div>
-                <div className="text-sm">
-                  Seat number : {movie.seat.seat_number}
-                </div>
-              </div>
-            </Link>
-          ))}
+          {movies ? (
+            <div>
+              {movies?.map((movie) => (
+                <Link
+                  href={`/movies/mine/${movie.ticket_number}`}
+                  key={movie.id}
+                >
+                  <div className="hover:bg-gray-600 p-2 flex gap-6 border-2 border-gray-500 my-2 rounded-md">
+                    <img
+                      src={movie.showtime.movie.poster}
+                      alt=""
+                      className="w-24 h-24 object cover"
+                    />
+                    <div>
+                      <div className="font-semibold">
+                        {movie.showtime.movie.title}
+                      </div>
+                      <div className="text-sm">
+                        Time :{formatDate(movie.showtime.start_time).date}{" "}
+                        {formatDate(movie.showtime.start_time).time}
+                      </div>
+                      <div className="text-sm">
+                        Seat number : {movie.seat.seat_number}
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <LoadingComponent />
+          )}
         </div>
       </div>
     </div>

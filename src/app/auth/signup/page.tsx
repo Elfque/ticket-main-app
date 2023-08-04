@@ -108,7 +108,7 @@ const Page = () => {
         {alert.map((ale, idx) => (
           <Alert alert={ale} key={idx} />
         ))}
-        <form action="" onSubmit={submitForm}>
+        <form action="" onSubmit={submitForm} autoComplete="off">
           <motion.div variants={childrenAnimation} className="control mt-2">
             <label htmlFor="title">Email</label>
             <input
@@ -119,7 +119,7 @@ const Page = () => {
             />
           </motion.div>
           <motion.div variants={childrenAnimation} className="control mt-2">
-            <label htmlFor="title">UserName</label>
+            <label htmlFor="title">Username</label>
             <input
               type="text"
               name="username"

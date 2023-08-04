@@ -7,10 +7,13 @@ import axios from "axios";
 import Alert from "@/app/components/Alert";
 import Loader from "@/app/components/Loader";
 import { motion } from "framer-motion";
+import { AiFillEye } from "react-icons/ai";
+import { BsFillEyeSlashFill } from "react-icons/bs";
 
 const Page = () => {
   const [alert, setAlert] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [passType, setPassType] = useState<string>("password");
   const router = useRouter();
   type detail = {
     username: string;
@@ -109,9 +112,9 @@ const Page = () => {
         {alert.map((ale, idx) => (
           <Alert alert={ale} key={idx} />
         ))}
-        <form action="" onSubmit={submitForm}>
+        <form action="" onSubmit={submitForm} autoComplete="false">
           <motion.div className="control mt-2" variants={childrenAnimation}>
-            <label htmlFor="title">UserName</label>
+            <label htmlFor="title">Username</label>
             <input
               type="text"
               name="username"
@@ -119,14 +122,26 @@ const Page = () => {
               onChange={changing}
             />
           </motion.div>
-          <motion.div className="control mt-2" variants={childrenAnimation}>
+          <motion.div
+            className="control mt-2 relative h-fit"
+            variants={childrenAnimation}
+          >
             <label htmlFor="title">Password</label>
-            <input
-              type="password"
-              name="password"
-              className="block bg-gray-600 text-white mt-2 outline-none py-2 px-4 w-full rounded-md"
-              onChange={changing}
-            />
+            <div className="relative w-full h-fit">
+              <input
+                type={passType}
+                name="password"
+                className="block bg-gray-600 text-white mt-2 outline-none py-2 px-4 w-full rounded-md"
+                onChange={changing}
+              />
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 text-2xl">
+                {passType === "password" ? (
+                  <AiFillEye onClick={() => setPassType("text")} />
+                ) : (
+                  <BsFillEyeSlashFill onClick={() => setPassType("password")} />
+                )}
+              </div>
+            </div>
           </motion.div>
 
           <div className="text-center mt-6">

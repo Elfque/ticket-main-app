@@ -82,7 +82,7 @@ const Page = () => {
           {alert.map((ale, idx) => (
             <Alert alert={ale} key={idx} />
           ))}
-          <form action="" onSubmit={submitForm}>
+          <form action="" onSubmit={submitForm} autoComplete="false">
             <div className="control mt-2">
               <label htmlFor="title">Old Password</label>
               <input

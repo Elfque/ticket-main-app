@@ -14,7 +14,6 @@ const Profile = () => {
       getUser();
     } else {
       setCurrentUser(user);
-      console.log(user);
     }
   }, [user]);
 
@@ -22,8 +21,8 @@ const Profile = () => {
     <div className="w-4/5 mx-auto">
       <Navbar />
 
-      <div className="lg:flex gap-12 items-center mt-8 block text-center lg:text-start">
-        <div className="picture-part border-4 border-slate-200 rounded-full ">
+      <div className="md:flex gap-12 items-center mt-8 block text-center md:text-start">
+        <div className="picture-part border-4 border-slate-200 rounded-full  w-fit mx-auto md:mx-0">
           <BsFillPersonFill className="w-60 h-auto " />
         </div>
         {user && (

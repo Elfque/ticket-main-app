@@ -8,6 +8,8 @@ import Loading1 from "@/app/components/Loader1";
 import Overlay from "@/app/components/Overlay";
 import Alert from "@/app/components/Alert";
 import axios from "axios";
+import Link from "next/link";
+import { motion } from "framer-motion";
 
 const Page = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
@@ -26,6 +28,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   const [selected, setSelected] = useState<number[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [seatAlert, setSeatAlert] = useState<any[]>([]);
+  const [booked, setBooked] = useState<boolean>(false);
 
   let row: string[] = ["", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
   let column: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -60,6 +63,7 @@ const Page = ({ params }: { params: { id: string } }) => {
       );
       setMovies(res.data);
       setLoading(false);
+      setBooked(true);
       setSelected([]);
     } catch (error: any) {
       setLoading(false);
@@ -106,6 +110,15 @@ const Page = ({ params }: { params: { id: string } }) => {
 
   const getColNum = (id: number) => {
     return id % 10;
+  };
+
+  const modal = {
+    visible: {
+      y: 0,
+    },
+    hidden: {
+      y: "-100vh",
+    },
   };
 
   return (
@@ -340,6 +353,34 @@ const Page = ({ params }: { params: { id: string } }) => {
             <Loading1 />
           </div>
         </div>
+      )}
+
+      {booked && <Overlay />}
+
+      {booked && (
+        <motion.div
+          className="modal  left-0 top-0 w-screen h-screen z-20 flex jus items-center fixed"
+          variants={modal}
+          initial="hidden"
+          animate="visible"
+          exit="hidden"
+        >
+          <div className="w-5/6 max-w-md p-6 text-sm text-center bg-slate-800 rounded-lg mx-auto">
+            <div className="text">
+              Your seat(s) has been booked, You can go to{" "}
+              <span className="underline">
+                <Link href={"/movies/mine"}>MyMovies</Link>
+              </span>{" "}
+              Page to view your bookings
+            </div>
+            <button
+              className="bg-slate-400 py-3 px-8 rounded-full mt-4"
+              onClick={() => setBooked(false)}
+            >
+              Okay
+            </button>
+          </div>
+        </motion.div>
       )}
     </div>
   );
