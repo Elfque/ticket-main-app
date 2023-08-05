@@ -142,7 +142,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                 </div>
               ))}
             </div>
-            <div className="flex gap-16">
+            <div className="flex gap-16 overflow-x-auto">
               <div className="left">
                 <div className="text-center">1</div>
                 <div className="text-center">2</div>

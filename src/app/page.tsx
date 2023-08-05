@@ -22,11 +22,8 @@ const Movies = () => {
   };
 
   useEffect(() => {
-    if (!localStorage.getItem("token")) router.push("/auth/signin");
-    if (!user) getUser();
-    console.log(user);
-
-    user && getMovies();
+    // if (!localStorage.getItem("token")) router.push("/auth/signin");
+    router.push("/movies");
   }, [user]);
 
   const formatDate = (date: Date) => {
