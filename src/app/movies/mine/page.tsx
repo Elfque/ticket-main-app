@@ -1,6 +1,7 @@
 "use client";
 import LoadingComponent from "@/app/components/LoaderComp";
 import Navbar from "@/app/components/Navbar";
+import Loading1 from "@/app/components/Loader1";
 import useStore, { authState, authFuncs } from "@/app/state/state";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -22,7 +23,6 @@ const Page = () => {
       .then((res) => res.json())
       .then((data) => {
         setMovies(data);
-        console.log(data);
       });
   };
 
@@ -84,7 +84,9 @@ const Page = () => {
               ))}
             </div>
           ) : (
-            <LoadingComponent />
+            <div className="flex h-[70vh] justify-center items-center w-[80vw] col-span-4">
+              <Loading1 />
+            </div>
           )}
         </div>
       </div>
