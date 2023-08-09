@@ -19,7 +19,7 @@ const Navbar = () => {
   return (
     <div className="py-2 relative">
       <div className="flex justify-between items-center">
-        <div className="logo font-bold text-3xl">Booker</div>
+        <div className="logo font-bold text-3xl">FlickFare</div>
 
         <ul
           className={`lg:flex lg:w-fit absolute top-full p-4 lg:p-0 lg:static gap-8 text-center lg:gap-2 text-sm bg-slate-700 lg:bg-transparent right-0 rounded-lg z-20 ${

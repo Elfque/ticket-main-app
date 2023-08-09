@@ -6,6 +6,7 @@ import useStore, { authState, authFuncs } from "@/app/state/state";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 const Page = () => {
   const router = useRouter();
@@ -23,6 +24,7 @@ const Page = () => {
       .then((res) => res.json())
       .then((data) => {
         setMovies(data);
+        // console.log(data);
       });
   };
 
@@ -37,6 +39,22 @@ const Page = () => {
         newDate.getMinutes() < 10 ? 0 : ""
       }${newDate.getMinutes()}`,
     };
+  };
+
+  const deleteBooking = async (id: number) => {
+    try {
+      const res = await axios.delete(
+        `https://r3tro.pythonanywhere.com/movies/${id}/`,
+        {
+          headers: {
+            Authorization: `Token ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -78,6 +96,12 @@ const Page = () => {
                       <div className="text-sm">
                         Seat number : {movie.seat.seat_number}
                       </div>
+                      {/* <button
+                        className="delete_seats bg-slate-600 text-white py-2 px-10 text-sm rounded-sm mt-8 mx-auto"
+                        onClick={() => deleteBooking(movie.id)}
+                      >
+                        Unbook Seat
+                      </button> */}
                     </div>
                   </div>
                 </Link>

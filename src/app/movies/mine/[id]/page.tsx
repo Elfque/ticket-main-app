@@ -26,12 +26,12 @@ const Page = ({ params }: { params: { id: string } }) => {
         <div className="border p-2 border-gray-500 text-sm">{id}</div>
       </main>
       <div className="text-center">
-        <button
+        {/* <button
           className="delete_seats bg-slate-600 text-white py-2 px-10 text-sm rounded-sm mt-8 mx-auto"
           onClick={deleteBooking}
         >
           Unbook Seat
-        </button>
+        </button> */}
       </div>
     </div>
   );
